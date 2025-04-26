@@ -79,20 +79,20 @@ export default function Stock() {
                             <div className="col-md-1">{data.situation}</div>
                             <div className="col-md-2">{data.lieu}</div>
                             <div className="col-md-2">{data.categorie}</div>    
-                            <div className="col-md-2 action">
+                            <div className="col-md-2 space-between">
                                 <Link to={`/stocks/${data.refMateriel}`} className="text-decoration-none">
-                                    <button  className="btn btn-link p-0 ms-4">
-                                    <i className="fa fa-file fa-2x text-success ms-4" title="Détails"></i>
+                                    <button  className="btn btn-link p-0 ms-2 ">
+                                    <i className="fa fa-file fa-2x text-success " title="Détails"></i>
                                     </button>
                                 </Link>
                                 <Link to={`update/${data.refMateriel}`} className="text-decoration-none">
-                                     <button  className="btn btn-link p-0 ms-4">
-                                    <i className="fa fa-edit fa-2x text-warning ms-4" title="Modifier"></i>
+                                     <button  className="btn btn-link p-0 ms-2 ">
+                                    <i className="fa fa-edit fa-2x text-warning " title="Modifier"></i>
                                     </button>
                                 </Link>   
                                 <button 
                                     onClick={() => handleDelete(data.refMateriel)}
-                                    className="btn btn-link p-0 ms-4"
+                                    className="btn btn-link p-0 ms-2"
                                     title="Supprimer"
                                 >
                                     <i className="fa fa-trash fa-2x text-danger"></i>
