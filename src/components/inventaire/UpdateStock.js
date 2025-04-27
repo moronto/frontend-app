@@ -1,10 +1,13 @@
+
 import { useState,useEffect } from "react"
-import axios from 'axios'
-import { useNavigate } from "react-router-dom"
-export default function AddStock(){
-  const navigate=useNavigate()
+import { useParams,useNavigate } from "react-router-dom"
+export default function UpdateStock(){
+
     const [displayBloc,setDisplayBloc]=useState({GE:"none",MOD:"none",CAB:"none"})
-    const [isdispo,setIsdispo]=useState(false)
+    const {ref}=useParams()
+    const navigate=useNavigate()
+    const [error, setError] = useState(null);
+
     const [dataStock,setDataStock]=useState({
         refMateriel:"",
         designation:"",
@@ -27,7 +30,7 @@ export default function AddStock(){
         dimension:"",
     })
     const [btnSabmit,setBtnSubmit]=useState(true)
-   
+   //Check fields if they have values
     useEffect(() => {
         // Vérifier les champs communs requis
         const commonFieldsFilled = 
@@ -64,116 +67,99 @@ export default function AddStock(){
         // Activer le bouton seulement si tous les champs requis sont remplis
         setBtnSubmit(!(commonFieldsFilled && specificFieldsFilled));
     }, [dataStock, detailGE, detailCAB, detailMOD]);
-    //function to check blocs to display
-    function displayBlocs(){
-        const cat=document.querySelector('#cat')
-
-        if (cat.value === 'GROUPE ELECTROGENE'){
-            setDisplayBloc({GE:"block",MOD:"none",CAB:"none"})   
-        }else if(cat.value === 'MODULAIRE'){
-            setDisplayBloc({GE:"none",MOD:"block",CAB:"none"})   
-        }else if(cat.value === 'CABINES AUTONOMES'){
-            setDisplayBloc({GE:"none",MOD:"none",CAB:"block"})   
-        }else{
-            setDisplayBloc({GE:"none",MOD:"none",CAB:"none"})   
-
+   //fetch data with the API
+   useEffect(()=>{
+    const fetchUpdateStock= async ()=>{
+        try{
+            const response = await fetch(`http://localhost:8000/api/stocks/${ref}/`);
+        if(!response.ok){
+            throw new Error("Réference non trouver")
         }
-        setDataStock({...dataStock,categorie:cat.value})
-    }
-    
-    //function wich handle submit form
+        const data=await response.json()
 
-    const  handelSubmitForm = async(e)=>{
-        e.preventDefault()
-      let  dataDetails={}
-       
-
-        switch(dataStock.categorie){
-            case 'GROUPE ELECTROGENE':
-                dataDetails={...detailGE}
-                break
-            case 'MODULAIRE':
-                dataDetails={...detailMOD}  
-                break
-            case 'CABINES AUTONOMES':
-                dataDetails={...detailCAB}  
-                break 
-            default:
-                break       
-
+        setDataStock(data.data[0])
+         switch (data.data[0].categorie) {
+           case "GROUPE ELECTROGENE":
+             setDisplayBloc({ GE: "block", MOD: "none", CAB: "none" });
+             setDetailGE(data.data[1])
+             break;
+           case "MODULAIRE":
+             setDisplayBloc({ GE: "none", MOD: "block", CAB: "none" });
+             setDetailMOD(data.data[1])
+             break;
+           case "CABINES AUTONOMES":
+             setDisplayBloc({ GE: "none", MOD: "none", CAB: "block" });
+             setDetailCAB(data.data[1])
+             break;
+           default:
+             setDisplayBloc({ GE: "none", MOD: "none", CAB: "none" });
+             break;
+         }
         }
-
-        const formData={
-          ...dataStock,
-          ...dataDetails,
+        catch (err){
+          setError(err.message)
+          
+        }
+        
       }
+      fetchUpdateStock()
+   },[])
+ //fuction to handel updating stock 
+ const handelUpdate= async (e)=>{
+e.preventDefault()
+    console.log('moronto');
+     let dataDetails = {};
+     switch (dataStock.categorie) {
+       case "GROUPE ELECTROGENE":
+         dataDetails = { ...detailGE };
+         break;
+       case "MODULAIRE":
+         dataDetails = { ...detailMOD };
+         break;
+       case "CABINES AUTONOMES":
+         dataDetails = { ...detailCAB };
+         break;
+       default:
+         break;
+     }
+
+     const formData = {
+       ...dataStock,
+       ...dataDetails,
+     };
 
 
-
-          try {
-        const response = await axios.post('http://localhost:8000/api/stocks/',formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        alert('Données envoyées avec succès!');
-        navigate('/stock')
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert(`Erreur: ${error.response?.data?.message || error.message}`);
+try{
+    const response = await fetch(
+      `http://localhost:8000/api/stock/update/${ref}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+    if(!response.ok){
+      throw new Error("Ce reference n'existe pas")
     }
-    }
+    const data=await response.json()
+    navigate('/stock', {state:{"msg":data.msg}})
     
-    //chech if the refMateril exist on database
 
-    async function  checkRef(ref){
-      const response = await axios.get('http://localhost:8000/api/stock/')
-      const data = await response.data
-      let i=0
-      
-        data.map((d)=>{
-          if(d.refMateriel===ref){
-            i+=1
-            setDataStock({...dataStock,refMateriel:""})
-          }
-        })
-        
-        
-        i>0 ? setIsdispo(true):setIsdispo(false)
-     
-   
-    }
+}catch (err){
+setError(err.message)
+}
 
+ }
     return (
       <>
-        <h1 class="text-center m-2 text-danger">Ajouter un Element</h1>
+        <h1 class="text-center m-2 text-danger">
+          Modification de : {dataStock.refMateriel}
+        </h1>
 
-        <form onSubmit={handelSubmitForm}>
+        <form onSubmit={handelUpdate}>
           <div class="m-auto   p-4 w-75 borderShadaw">
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Réference de Materiel</div>
-
-              <div class="col-md-8">
-                <input
-                  id="refMateriel"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={dataStock.refMateriel || ""}
-                  onChange={(e) => {
-                    setDataStock({ ...dataStock, refMateriel: e.target.value });
-                  }}
-                  onBlur={() => checkRef(dataStock.refMateriel)}
-                />
-                <div
-                  id="msgErr"
-                  style={{ color: "red", display: isdispo ? "block" : "none" }}
-                >
-                  Ce Reference existe deja
-                </div>
-              </div>
-            </div>
             <div class="row mt-2">
               <div class="col-md-4 fs-6 text-dark">Designations</div>
 
@@ -191,6 +177,21 @@ export default function AddStock(){
             </div>
 
             <div class="row mt-2">
+              <div class="col-md-4 fs-6 text-dark">Situation</div>
+
+              <div class="col-md-8">
+                <input
+                  name="lieu"
+                  type="text"
+                  class="form-control fs-6 text-secondary text-uppercase"
+                  value={dataStock.situation || ""}
+                  onChange={(e) => {
+                    setDataStock({ ...dataStock, situation: e.target.value });
+                  }}
+                />
+              </div>
+            </div>
+            <div class="row mt-2">
               <div class="col-md-4 fs-6 text-dark">Emplacement</div>
 
               <div class="col-md-8">
@@ -203,23 +204,6 @@ export default function AddStock(){
                     setDataStock({ ...dataStock, lieu: e.target.value });
                   }}
                 />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Categorie</div>
-
-              <div class="col-md-8">
-                <select
-                  name="categorie"
-                  class="form-select"
-                  id="cat"
-                  onChange={displayBlocs}
-                >
-                  <option selected>Selectioner...</option>
-                  <option value="GROUPE ELECTROGENE">GROUPE ELECTROGENE</option>
-                  <option value="MODULAIRE">MODULAIRE</option>
-                  <option value="CABINES AUTONOMES">CABINES AUTONOMES</option>
-                </select>
               </div>
             </div>
 
