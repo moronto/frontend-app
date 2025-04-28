@@ -33,88 +33,96 @@ export default function DetailStock() {
     const detailSt = stock[1] || {}; // Fallback pour les données spécifiques
 
     return (
-        <div className="container mt-4">
-            <h2 className="bg-info ps-4 pt-1 pb-1 pe-4">Détail de : {st.refMateriel}</h2>
-            <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Designation</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{st.designation || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Situation</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{st.situation || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Lieu</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{st.lieu || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Categorie</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{st.categorie || 'N/A'}</div>
-                    </div>
-
-
-            {st.categorie === 'GROUPE ELECTROGENE' && (
-                <>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Puissance</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.puissance || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Marque</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.marque || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Dimension</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.dimension || 'N/A'}</div>
-                    </div>
-                </>
-            )}
-
-            {st.categorie === 'MODULAIRE' && (
-                <>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Gamme</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.gamme || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Dimension</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.dimension || 'N/A'}</div>
-                    </div>
-                </>
-            )}
-
-            {st.categorie === "CABINES AUTONOMES" && (
-                <>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Gamme</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.gamme || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Couleur</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.color || 'N/A'}</div>
-                    </div>
-                    <div className="row bg-light p-2 m-1">
-                        <div className="col-md-5">Dimension</div>
-                        <div className="col-md-2">:</div>
-                        <div className="col-md-5">{detailSt.dimension || 'N/A'}</div>
-                    </div>
-                </>
-            )}
-
-            <div className='row justify-content-center mt-4'>
-                <Link to='/stock' className="btn btn-primary w-25">Retour</Link>
-            </div>
+      <div className="container mt-4">
+        <h2 className="bg-info ps-4 pt-1 pb-1 pe-4">
+          Détail de : {st.refMateriel}
+        </h2>
+        <div className="row bg-light p-2 m-1">
+          <div className="col-md-5">Designation</div>
+          <div className="col-md-2">:</div>
+          <div className="col-md-5">{st.designation || "N/A"}</div>
         </div>
+        <div className="row bg-light p-2 m-1">
+          <div className="col-md-5">Situation</div>
+          <div className="col-md-2">:</div>
+          <div className="col-md-5">{st.situation || "N/A"}</div>
+        </div>
+        <div className="row bg-light p-2 m-1">
+          <div className="col-md-5">Emplacement</div>
+          <div className="col-md-2">:</div>
+          <div className="col-md-5">{st.lieu || "N/A"}</div>
+        </div>
+        <div className="row bg-light p-2 m-1">
+          <div className="col-md-5">Ville</div>
+          <div className="col-md-2">:</div>
+          <div className="col-md-5">{st.client || "N/A"}</div>
+        </div>
+        <div className="row bg-light p-2 m-1">
+          <div className="col-md-5">Categorie</div>
+          <div className="col-md-2">:</div>
+          <div className="col-md-5">{st.categorie || "N/A"}</div>
+        </div>
+
+        {st.categorie === "GROUPE ELECTROGENE" && (
+          <>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Puissance</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.puissance || "N/A"}</div>
+            </div>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Marque</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.marque || "N/A"}</div>
+            </div>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Dimension</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.dimension || "N/A"}</div>
+            </div>
+          </>
+        )}
+
+        {st.categorie === "MODULAIRE" && (
+          <>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Gamme</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.gamme || "N/A"}</div>
+            </div>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Dimension</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.dimension || "N/A"}</div>
+            </div>
+          </>
+        )}
+
+        {st.categorie === "CABINES AUTONOMES" && (
+          <>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Gamme</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.gamme || "N/A"}</div>
+            </div>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Couleur</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.color || "N/A"}</div>
+            </div>
+            <div className="row bg-light p-2 m-1">
+              <div className="col-md-5">Dimension</div>
+              <div className="col-md-2">:</div>
+              <div className="col-md-5">{detailSt.dimension || "N/A"}</div>
+            </div>
+          </>
+        )}
+
+        <div className="row justify-content-center mt-4">
+          <Link to="/stock" className="btn btn-primary w-25">
+            Retour
+          </Link>
+        </div>
+      </div>
     );
 }

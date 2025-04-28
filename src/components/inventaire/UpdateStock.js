@@ -192,6 +192,21 @@ setError(err.message)
               </div>
             </div>
             <div class="row mt-2">
+              <div class="col-md-4 fs-6 text-dark">Client</div>
+
+              <div class="col-md-8">
+                <input
+                  name="lieu"
+                  type="text"
+                  class="form-control fs-6 text-secondary text-uppercase"
+                  value={dataStock.client || ""}
+                  onChange={(e) => {
+                    setDataStock({ ...dataStock, client: e.target.value });
+                  }}
+                />
+              </div>
+            </div>
+            <div class="row mt-2">
               <div class="col-md-4 fs-6 text-dark">Emplacement</div>
 
               <div class="col-md-8">
