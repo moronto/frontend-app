@@ -1,7 +1,8 @@
-import { useState,useEffect } from "react"
-import axios from 'axios'
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./addStock.css";
+
 export default function AddStock() {
   const navigate = useNavigate();
   const [displayBloc, setDisplayBloc] = useState({
@@ -32,10 +33,9 @@ export default function AddStock() {
     gamme: "",
     dimension: "",
   });
-  const [btnSabmit, setBtnSubmit] = useState(true);
+  const [btnSubmit, setBtnSubmit] = useState(true);
 
   useEffect(() => {
-    // Vérifier les champs communs requis
     const commonFieldsFilled =
       dataStock.refMateriel.trim() !== "" &&
       dataStock.designation.trim() !== "" &&
@@ -44,7 +44,6 @@ export default function AddStock() {
 
     let specificFieldsFilled = false;
 
-    // Vérifier les champs spécifiques selon la catégorie
     switch (dataStock.categorie) {
       case "GROUPE ELECTROGENE":
         specificFieldsFilled =
@@ -66,10 +65,9 @@ export default function AddStock() {
         specificFieldsFilled = false;
     }
 
-    // Activer le bouton seulement si tous les champs requis sont remplis
     setBtnSubmit(!(commonFieldsFilled && specificFieldsFilled));
   }, [dataStock, detailGE, detailCAB, detailMOD]);
-  //function to check blocs to display
+
   function displayBlocs() {
     const cat = document.querySelector("#cat");
 
@@ -84,8 +82,6 @@ export default function AddStock() {
     }
     setDataStock({ ...dataStock, categorie: cat.value });
   }
-
-  //function wich handle submit form
 
   const handelSubmitForm = async (e) => {
     e.preventDefault();
@@ -123,7 +119,7 @@ export default function AddStock() {
 
       navigate("/stock", {
         state: {
-          msg: "Vous avez ajouter " + dataStock.refMateriel + " avec success",
+          msg: "Vous avez ajouté " + dataStock.refMateriel + " avec succès",
         },
       });
     } catch (error) {
@@ -131,8 +127,6 @@ export default function AddStock() {
       alert(`Erreur: ${error.response?.data?.message || error.message}`);
     }
   };
-
-  //chech if the refMateril exist on database
 
   async function checkRef(ref) {
     const response = await axios.get("http://localhost:8000/api/stock/");
@@ -150,249 +144,246 @@ export default function AddStock() {
   }
 
   return (
-    <>
-      <h1
-        id="title"
-        class="text-center  align-center w-75 m-auto pt-3 pb-3 mt-3"
-      >
-        Ajouter Nouveau Materiel
-      </h1>
-
-      <form onSubmit={handelSubmitForm}>
-        <div class="m-auto   p-4 w-75 borderShadaw">
-          <div class="row mt-2">
-            <div class="col-md-4 fs-6 text-dark">Réference de Materiel</div>
-
-            <div class="col-md-8">
-              <input
-                id="refMateriel"
-                type="text"
-                class="form-control fs-6 text-secondary"
-                value={dataStock.refMateriel || ""}
-                onChange={(e) => {
-                  setDataStock({ ...dataStock, refMateriel: e.target.value });
-                }}
-                onBlur={() => checkRef(dataStock.refMateriel)}
-              />
-              <div
-                id="msgErr"
-                style={{ color: "red", display: isdispo ? "block" : "none" }}
-              >
-                Ce Reference existe deja
-              </div>
-            </div>
-          </div>
-          <div class="row mt-2">
-            <div class="col-md-4 fs-6 text-dark">Designations</div>
-
-            <div class="col-md-8">
-              <input
-                name="designation"
-                type="text"
-                class="form-control fs-6 text-secondary text-uppercase"
-                value={dataStock.designation || ""}
-                onChange={(e) => {
-                  setDataStock({ ...dataStock, designation: e.target.value });
-                }}
-              />
-            </div>
-          </div>
-
-          <div class="row mt-2">
-            <div class="col-md-4 fs-6 text-dark">Client</div>
-
-            <div class="col-md-8">
-              <input
-                name="lieu"
-                type="text"
-                class="form-control fs-6 text-secondary text-uppercase"
-                value={dataStock.client || ""}
-                onChange={(e) => {
-                  setDataStock({ ...dataStock, client: e.target.value });
-                }}
-              />
-            </div>
-          </div>
-          <div class="row mt-2">
-            <div class="col-md-4 fs-6 text-dark">Emplacement</div>
-
-            <div class="col-md-8">
-              <input
-                name="lieu"
-                type="text"
-                class="form-control fs-6 text-secondary text-uppercase"
-                value={dataStock.lieu || ""}
-                onChange={(e) => {
-                  setDataStock({ ...dataStock, lieu: e.target.value });
-                }}
-              />
-            </div>
-          </div>
-          <div class="row mt-2">
-            <div class="col-md-4 fs-6 text-dark">Categorie</div>
-
-            <div class="col-md-8">
-              <select
-                name="categorie"
-                class="form-select"
-                id="cat"
-                onChange={displayBlocs}
-              >
-                <option selected>Selectioner...</option>
-                <option value="GROUPE ELECTROGENE">GROUPE ELECTROGENE</option>
-                <option value="MODULAIRE">MODULAIRE</option>
-                <option value="CABINES AUTONOMES">CABINES AUTONOMES</option>
-              </select>
-            </div>
-          </div>
-
-          <div id="GE" style={{ display: displayBloc.GE }}>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Puissance</div>
-              <div class="col-md-8">
-                <input
-                  name="puissance"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailGE.puissance || ""}
-                  onChange={(e) => {
-                    setDetailGE({ ...detailGE, puissance: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Marque</div>
-              <div class="col-md-8">
-                <input
-                  name="marque"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailGE.marque || ""}
-                  onChange={(e) => {
-                    setDetailGE({ ...detailGE, marque: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Dimension</div>
-              <div class="col-md-8">
-                <input
-                  name="dimensionGE"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailGE.dimension || ""}
-                  onChange={(e) => {
-                    setDetailGE({ ...detailGE, dimension: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-3">
-              <input
-                type="submit"
-                disabled={btnSabmit}
-                class="btn btn-success"
-                value="Enregistrer"
-              />
-            </div>
-          </div>
-
-          <div id="cabine" style={{ display: displayBloc.CAB }}>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Gamme</div>
-              <div class="col-md-8">
-                <input
-                  name="gammeCabine"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailCAB.gamme || ""}
-                  onChange={(e) => {
-                    setDetailCAB({ ...detailCAB, gamme: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Dimension</div>
-              <div class="col-md-8">
-                <input
-                  name="dimensionCabine"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailCAB.dimension || ""}
-                  onChange={(e) => {
-                    setDetailCAB({ ...detailCAB, dimension: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Color</div>
-              <div class="col-md-8">
-                <input
-                  name="color"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailCAB.color || ""}
-                  onChange={(e) => {
-                    setDetailCAB({ ...detailCAB, color: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-3">
-              <input
-                type="submit"
-                disabled={btnSabmit}
-                class="btn btn-success"
-                value="Enregistrer"
-              />
-            </div>
-          </div>
-
-          <div id="modulaire" style={{ display: displayBloc.MOD }}>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Gamme</div>
-              <div class="col-md-8">
-                <input
-                  name="gammeModulaire"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailMOD.gamme || ""}
-                  onChange={(e) => {
-                    setDetailMOD({ ...detailMOD, gamme: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-2">
-              <div class="col-md-4 fs-6 text-dark">Dimension</div>
-              <div class="col-md-8">
-                <input
-                  name="dimensionModulaire"
-                  type="text"
-                  class="form-control fs-6 text-secondary text-uppercase"
-                  value={detailMOD.dimension || ""}
-                  onChange={(e) => {
-                    setDetailMOD({ ...detailMOD, dimension: e.target.value });
-                  }}
-                />
-              </div>
-            </div>
-            <div class="row mt-3">
-              <input
-                type="submit"
-                class="btn btn-success"
-                value="Enregistrer"
-                disabled={btnSabmit}
-              />
-              {/* <button class="btn btn-success">Enregistrer</button> */}
-            </div>
-          </div>
+    <div className="container">
+      <div className="card shadow-lg">
+        <div className="card-header bg-primary text-white">
+          <h2 className="h4 mb-0 text-center">Ajouter Nouveau Matériel</h2>
         </div>
-      </form>
-    </>
+
+        <div className="card-body">
+          <form onSubmit={handelSubmitForm}>
+            <div className="row g-3">
+              {/* Section commune */}
+              <div className="col-md-6">
+                <div className="mb-1">
+                  <label className="form-label fw-bold">
+                    Référence de Matériel
+                  </label>
+                  <input
+                    id="refMateriel"
+                    type="text"
+                    className={`form-control ${isdispo ? "is-invalid" : ""}`}
+                    value={dataStock.refMateriel || ""}
+                    onChange={(e) => {
+                      setDataStock({
+                        ...dataStock,
+                        refMateriel: e.target.value,
+                      });
+                    }}
+                    onBlur={() => checkRef(dataStock.refMateriel)}
+                  />
+                  {isdispo && (
+                    <div className="invalid-feedback">
+                      Cette référence existe déjà
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="mb-1">
+                  <label className="form-label fw-bold">Désignation</label>
+                  <input
+                    name="designation"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={dataStock.designation || ""}
+                    onChange={(e) => {
+                      setDataStock({
+                        ...dataStock,
+                        designation: e.target.value,
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="mb-1">
+                  <label className="form-label fw-bold">Client</label>
+                  <input
+                    name="client"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={dataStock.client || ""}
+                    onChange={(e) => {
+                      setDataStock({ ...dataStock, client: e.target.value });
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="mb-1">
+                  <label className="form-label fw-bold">Emplacement</label>
+                  <input
+                    name="lieu"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={dataStock.lieu || ""}
+                    onChange={(e) => {
+                      setDataStock({ ...dataStock, lieu: e.target.value });
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-6">
+                <div className="mb-1">
+                  <label className="form-label fw-bold">Catégorie</label>
+                  <select
+                    name="categorie"
+                    className="form-select"
+                    id="cat"
+                    onChange={displayBlocs}
+                  >
+                    <option value="">Sélectionner...</option>
+                    <option value="GROUPE ELECTROGENE">
+                      GROUPE ELECTROGENE
+                    </option>
+                    <option value="MODULAIRE">MODULAIRE</option>
+                    <option value="CABINES AUTONOMES">CABINES AUTONOMES</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Section spécifique selon la catégorie */}
+            <div
+              className="mt-4 p-3 bg-light rounded"
+              style={{ display: displayBloc.GE }}
+            >
+              <h5 className="mb-3 text-primary">Détails Groupe Électrogène</h5>
+              <div className="row g-3">
+                <div className="col-md-4">
+                  <label className="form-label">Puissance</label>
+                  <input
+                    name="puissance"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailGE.puissance || ""}
+                    onChange={(e) => {
+                      setDetailGE({ ...detailGE, puissance: e.target.value });
+                    }}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Marque</label>
+                  <input
+                    name="marque"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailGE.marque || ""}
+                    onChange={(e) => {
+                      setDetailGE({ ...detailGE, marque: e.target.value });
+                    }}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Dimension</label>
+                  <input
+                    name="dimensionGE"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailGE.dimension || ""}
+                    onChange={(e) => {
+                      setDetailGE({ ...detailGE, dimension: e.target.value });
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="mt-4 p-3 bg-light rounded"
+              style={{ display: displayBloc.CAB }}
+            >
+              <h5 className="mb-3 text-primary">Détails Cabines Autonomes</h5>
+              <div className="row g-3">
+                <div className="col-md-4">
+                  <label className="form-label">Gamme</label>
+                  <input
+                    name="gammeCabine"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailCAB.gamme || ""}
+                    onChange={(e) => {
+                      setDetailCAB({ ...detailCAB, gamme: e.target.value });
+                    }}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Dimension</label>
+                  <input
+                    name="dimensionCabine"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailCAB.dimension || ""}
+                    onChange={(e) => {
+                      setDetailCAB({ ...detailCAB, dimension: e.target.value });
+                    }}
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label">Couleur</label>
+                  <input
+                    name="color"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailCAB.color || ""}
+                    onChange={(e) => {
+                      setDetailCAB({ ...detailCAB, color: e.target.value });
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+              className="mt-4 p-3 bg-light rounded"
+              style={{ display: displayBloc.MOD }}
+            >
+              <h5 className="mb-3 text-primary">Détails Modulaire</h5>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label className="form-label">Gamme</label>
+                  <input
+                    name="gammeModulaire"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailMOD.gamme || ""}
+                    onChange={(e) => {
+                      setDetailMOD({ ...detailMOD, gamme: e.target.value });
+                    }}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label">Dimension</label>
+                  <input
+                    name="dimensionModulaire"
+                    type="text"
+                    className="form-control text-uppercase"
+                    value={detailMOD.dimension || ""}
+                    onChange={(e) => {
+                      setDetailMOD({ ...detailMOD, dimension: e.target.value });
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+              <button
+                type="submit"
+                className="btn btn-primary px-4"
+                disabled={btnSubmit}
+              >
+                <i className="fas fa-save me-2"></i> Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }

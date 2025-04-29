@@ -1,15 +1,16 @@
-import 'bootstrap/dist/css/bootstrap.css'
-import "bootstrap/dist/js/bootstrap.js"
-import Home from "./components/inventaire/home";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Route, Routes, Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import Home from "./components/inventaire/home";
 import DetailStock from "./components/inventaire/DetailStock";
 import Stock from "./components/inventaire/Stock";
 import AddStock from "./components/inventaire/AddStock";
 import DeleteStock from "./components/inventaire/DeleteStock";
 import UpdateStock from "./components/inventaire/UpdateStock";
 import Movements from "./components/movements/Movements";
-import toast, { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
+import DetailsMovement from "./components/movements/detailsMovement";
 
 function App() {
   const location = useLocation();
@@ -17,178 +18,229 @@ function App() {
   useEffect(() => {
     if (location.state?.msg) {
       toast.success(location.state.msg);
-      // Effacer le message après l'affichage pour éviter qu'il ne réapparaisse
       location.state.msg = null;
     }
   }, [location.state]);
+
   return (
-    <div className="App">
-      <Toaster />
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <Link to="/home">
+    <div
+      className="d-flex flex-column min-vh-100"
+      style={{ backgroundColor: "#f8f9fa" }}
+    >
+      <Toaster position="top-right" />
+
+      {/* Navigation Bar */}
+      <nav
+        className="navbar navbar-expand-lg navbar-dark shadow-sm"
+        style={{ background: "#008080", boxShadow: "5px 10px  #99999 inset" }}
+      >
+        <div className="container-fluid">
+          <Link to="/home" className="navbar-brand">
             <img
               src="/img/ATOUT.PNG"
-              class="img-fluid"
-              width="200px"
-              height="100px"
+              className="img-fluid"
+              width="200"
+              alt="Logo ATOUT"
             />
           </Link>
 
           <button
-            class="navbar-toggler"
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item dropdown">
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul className="navbar-nav me-auto">
+              {/* Gestion de Stock */}
+              <li className="nav-item dropdown">
                 <a
-                  class="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle"
                   href="#"
+                  id="stockDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
                   Gestion de Stock
                 </a>
-                <ul class="dropdown-menu">
+                <ul className="dropdown-menu" aria-labelledby="stockDropdown">
                   <li>
-                    <Link to="/addStock">
-                      <a class="dropdown-item">Ajouter Materiel</a>
+                    <Link to="/addStock" className="dropdown-item">
+                      Ajouter Matériel
                     </Link>
                   </li>
                   <li>
-                    <Link to="/stock">
-                      {" "}
-                      <a class="dropdown-item">Afficher Stock</a>
+                    <Link to="/stock" className="dropdown-item">
+                      Afficher Stock
                     </Link>
                   </li>
                 </ul>
               </li>
 
-              <li class="nav-item dropdown">
+              {/* Gestion des Réservations */}
+              <li className="nav-item dropdown">
                 <a
-                  class="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle"
                   href="#"
+                  id="reservationDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 >
-                  Gestion des Reservations
+                  Gestion des Réservations
                 </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="{% url 'reservations' %}">
-                      Reservations
-                    </a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="{% url 'addreservation' %}">
-                      Ajouter Reservation
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby="reservationDropdown"
                 >
-                  Gestion des Livraisons
-                </a>
-                <ul class="dropdown-menu">
                   <li>
-                    <a class="dropdown-item" href="{% url 'livraison' %}">
-                      Livraisons
-                    </a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="{% url 'newLivraison' %}">
-                      Ajouter un nouveau
-                    </a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                >
-                  Gestion des Mouvements
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <Link to="/movements">
-                      <a class="dropdown-item" href="{% url 'movement' %}">
-                        Mouvements
-                      </a>
+                    <Link to="#" className="dropdown-item">
+                      Réservations
                     </Link>
                   </li>
                   <li>
-                    <a class="dropdown-item" href="{% url 'addMovement' %}">
+                    <Link to="#" className="dropdown-item">
+                      Ajouter Réservation
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Gestion des Livraisons */}
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  id="deliveryDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Gestion des Livraisons
+                </a>
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby="deliveryDropdown"
+                >
+                  <li>
+                    <Link to="#" className="dropdown-item">
+                      Livraisons
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="dropdown-item">
+                      Ajouter Livraison
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Gestion des Mouvements */}
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  href="#"
+                  id="movementDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Gestion des Mouvements
+                </a>
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby="movementDropdown"
+                >
+                  <li>
+                    <Link to="/movements" className="dropdown-item">
+                      Mouvements
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="#" className="dropdown-item">
                       Ajouter un Sortie
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </li>
             </ul>
 
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item dropdown">
+            {/* User Section */}
+            <ul className="navbar-nav ms-auto">
+              <li className="nav-item dropdown">
                 <a
-                  class="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle"
                   href="#"
+                  id="userDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
-                ></a>
-                <ul class="dropdown-menu dropdown-menu-end">
+                  aria-expanded="false"
+                >
+                  <i className="fas fa-user-circle fa-lg"></i>
+                </a>
+                <ul
+                  className="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="userDropdown"
+                >
                   <li>
-                    <a class="dropdown-item" href="#">
-                      Profil
-                    </a>
+                    <Link to="#" className="dropdown-item">
+                      <i className="fas fa-user me-2"></i> Profil
+                    </Link>
                   </li>
                   <li>
-                    <hr class="dropdown-divider" />
+                    <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <form method="post" action="{% url 'logout' %}">
-                      <button type="submit" class="dropdown-item text-danger">
-                        Déconnexion
-                      </button>
-                    </form>
+                    <button className="dropdown-item text-danger">
+                      <i className="fas fa-sign-out-alt me-2"></i> Déconnexion
+                    </button>
                   </li>
                 </ul>
-              </li>
-              <li class="nav-item">
-                <a class="btn btn-outline-light me-2" href="{% url 'login' %}">
-                  Connexion
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="btn btn-primary" href="{% url 'register' %}">
-                  Inscription
-                </a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
-      <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/stock" element={<Stock />} />
-        <Route path="/addStock" element={<AddStock />} />
-        <Route path="/stocks/:ref" element={<DetailStock />} />
-        <Route path="/stock/:ref" element={<DeleteStock />} />
-        <Route path="/stock/update/:ref" element={<UpdateStock />} />
-        <Route path="/movements" element={<Movements />} />
-      </Routes>
+
+      {/* Main Content - flex-grow-1 permet au contenu de prendre tout l'espace disponible */}
+      <main className="flex-grow-1 container-fluid py-1">
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/addStock" element={<AddStock />} />
+          <Route path="/stocks/:ref" element={<DetailStock />} />
+          <Route path="/stock/:ref" element={<DeleteStock />} />
+          <Route path="/stock/update/:ref" element={<UpdateStock />} />
+          <Route path="/movements" element={<Movements />} />
+          <Route path="/detailsMovement/:id" element={<DetailsMovement />} />
+        </Routes>
+      </main>
+
+      {/* Footer - mt-auto pousse le footer vers le bas */}
+      <footer className="bg-dark text-white py-3 mt-auto">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-6">
+              <p className="mb-0">&copy; 2023 ATOUT. Tous droits réservés.</p>
+            </div>
+            <div className="col-md-6 text-md-end">
+              <Link to="#" className="text-white me-3">
+                Mentions légales
+              </Link>
+              <Link to="#" className="text-white">
+                Contact
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
