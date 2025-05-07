@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Movement() {
   const [movement, setMovement] = useState([]);
@@ -7,6 +8,7 @@ export default function Movement() {
   const [inputSearch, setInputSearch] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMouvement, setSelectedMouvement] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMouvement = async () => {
@@ -38,20 +40,34 @@ export default function Movement() {
     }
   }, [inputSearch, movement]);
 
-  const handleDeleteClick = (mouvement) => {
-    setSelectedMouvement(mouvement);
-    setShowDeleteModal(true);
-  };
-
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = (move) => {
     // Ajoutez ici la logique de suppression
-    console.log("Suppression de", selectedMouvement);
-    setShowDeleteModal(false);
+    setShowDeleteModal(true);
+    setSelectedMouvement(move);
   };
-
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
   };
+
+  //delete movement
+  async function deleteMovement() {
+    try {
+      await axios.delete(
+        `http://localhost:8000/api/delete/${selectedMouvement.id}`
+      );
+
+      // Mise à jour locale sans recharger
+      setMovement((prev) => prev.filter((m) => m.id !== selectedMouvement.id));
+      setDataFiltred((prev) =>
+        prev.filter((m) => m.id !== selectedMouvement.id)
+      );
+
+      setShowDeleteModal(false);
+      // Afficher un message de succès
+    } catch (error) {
+      console.error("Erreur lors de la suppression:", error);
+    }
+  }
 
   return (
     <div className="container-fluid py-4">
@@ -73,10 +89,7 @@ export default function Movement() {
                 </p>
               </div>
               <div className="modal-footer">
-                <button
-                  className="btn btn-danger"
-                  onClick={handleConfirmDelete}
-                >
+                <button className="btn btn-danger" onClick={deleteMovement}>
                   Oui, supprimer
                 </button>
                 <button
@@ -160,7 +173,7 @@ export default function Movement() {
                           </Link>
                           <button
                             className="btn btn-sm btn-outline-danger"
-                            onClick={() => handleDeleteClick(move)}
+                            onClick={() => handleConfirmDelete(move)}
                             title="Supprimer"
                           >
                             <i className="fas fa-trash"></i>
@@ -187,9 +200,6 @@ export default function Movement() {
           <small className="text-muted">
             Total: {dataFiltred.length} mouvement(s)
           </small>
-          <Link to="/addMouvement" className="btn btn-primary">
-            <i className="fas fa-plus me-2"></i> Ajouter un mouvement
-          </Link>
         </div>
       </div>
     </div>

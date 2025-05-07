@@ -15,7 +15,7 @@ export default function AddStock() {
     refMateriel: "",
     designation: "",
     situation: "DISPONIBLE",
-    client: "",
+    ville: "",
     lieu: "",
     categorie: "",
   });
@@ -39,8 +39,7 @@ export default function AddStock() {
     const commonFieldsFilled =
       dataStock.refMateriel.trim() !== "" &&
       dataStock.designation.trim() !== "" &&
-      dataStock.lieu.trim() !== "" &&
-      dataStock.categorie.trim() !== "";
+      dataStock.lieu.trim() !== "";
 
     let specificFieldsFilled = false;
 
@@ -193,21 +192,6 @@ export default function AddStock() {
                         ...dataStock,
                         designation: e.target.value,
                       });
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="col-md-6">
-                <div className="mb-1">
-                  <label className="form-label fw-bold">Client</label>
-                  <input
-                    name="client"
-                    type="text"
-                    className="form-control text-uppercase"
-                    value={dataStock.client || ""}
-                    onChange={(e) => {
-                      setDataStock({ ...dataStock, client: e.target.value });
                     }}
                   />
                 </div>

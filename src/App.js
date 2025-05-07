@@ -11,8 +11,8 @@ import DeleteStock from "./components/inventaire/DeleteStock";
 import UpdateStock from "./components/inventaire/UpdateStock";
 import Movements from "./components/movements/Movements";
 import DetailsMovement from "./components/movements/detailsMovement";
-import AddMovement from "./components/movements/AddMovement";
-
+import AddSortie from "./components/movements/AddSortie";
+import AddRetour from "./components/movements/AddRetour";
 function App() {
   const location = useLocation();
 
@@ -165,8 +165,13 @@ function App() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/addMovement" className="dropdown-item">
+                    <Link to="/addSortie" className="dropdown-item">
                       Ajouter un Sortie
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/addRetour" className="dropdown-item">
+                      Ajouter un Entrer
                     </Link>
                   </li>
                 </ul>
@@ -221,8 +226,8 @@ function App() {
           <Route path="/stock/update/:ref" element={<UpdateStock />} />
           <Route path="/movements" element={<Movements />} />
           <Route path="/detailsMovement/:id" element={<DetailsMovement />} />
-          <Route path="/addMovement" element={<AddMovement />} />
-
+          <Route path="/addSortie" element={<AddSortie />} />
+          <Route path="/addRetour" element={<AddRetour />} />
         </Routes>
       </main>
 
