@@ -83,9 +83,9 @@ export default function DetailsMovement() {
               </div>
 
               <div className="mb-3">
-                <label className="form-label fw-bold">Client</label>
+                <label className="form-label fw-bold">Emplacement</label>
                 <div className="form-control-plaintext border-bottom pb-2">
-                  {movementDetail.client || "-"}
+                  {movementDetail.lieu || "-"}
                 </div>
               </div>
 
@@ -118,7 +118,7 @@ export default function DetailsMovement() {
               <div className="mb-3">
                 <label className="form-label fw-bold">Lieu de location</label>
                 <div className="form-control-plaintext border-bottom pb-2">
-                  {movementDetail.lieu || "-"}
+                  {movementDetail.ville || "-"}
                 </div>
               </div>
             </div>

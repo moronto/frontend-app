@@ -43,6 +43,7 @@ export default function Stock() {
             d.refMateriel?.toLowerCase().includes(inputSearch.toLowerCase()) ||
             d.designation?.toLowerCase().includes(inputSearch.toLowerCase()) ||
             d.lieu?.toLowerCase().includes(inputSearch.toLowerCase()) ||
+            d.situation?.toLowerCase().includes(inputSearch.toLowerCase()) ||
             d.categorie?.toLowerCase().includes(inputSearch.toLowerCase()) ||
             d.ville?.toLowerCase().includes(inputSearch.toLowerCase())
           );
@@ -177,16 +178,16 @@ export default function Stock() {
 
     // Main render
     return (
-      <div className="container-fluid p-4 bg-light rounded-3 shadow-sm">
-        <div className="card border-0 shadow">
-          <div className="card-header bg-primary text-white">
+      <div className="container-fluid p-4 bg-light rounded-3 shadow-sm ">
+        <div className="card border-0 shadow ">
+          <div className="card-header bg-primary text-white ">
             <h1 className="h3 mb-0 text-center">
               <i className="fas fa-boxes me-2"></i>
               INVENTAIRE GÉNÉRAL
             </h1>
           </div>
           {/* Barre de recherche */}
-          <div className="card mb-4 shadow-sm">
+          <div className="card mb-4 shadow-sm sticky-top">
             <div className="card-body">
               <div className="row align-items-center">
                 <div className="col-md-3">

@@ -2,7 +2,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState,useEffect } from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "./AddSortie.css";
 export default function AddSortie() {
+  const [msgErreur, setMsgErreur] = useState({ etat: false, msg: "" });
   const navigate = useNavigate();
   const [dataForm, setDataForm] = useState({
     typeMovement: "SORTIE",
@@ -39,6 +41,41 @@ export default function AddSortie() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMsgErreur({ etat: "false", msg: "" });
+
+    const resp = await fetch(
+      `http://localhost:8000/api/stock/${dataForm.refMateriel}`
+    );
+    const d = await resp.json();
+    console.log(d);
+    try {
+      if (resp.ok) {
+        if (d.situation === "LOUER") {
+          setMsgErreur({ etat: true, msg: "Ce réfernce est deja en location" });
+
+          return;
+        } else if (d.situation === "VENTE") {
+          setMsgErreur({ etat: true, msg: "Ce Réference été vendu" });
+
+          return;
+        } else if (d.situation === "A VERFIER") {
+          setMsgErreur({
+            etat: true,
+            msg: "Ce Réference est en verifications",
+          });
+        }
+      } else {
+        setMsgErreur({
+          etat: true,
+          msg: "Ce Reference n'est existe pas dans le stock",
+        });
+
+        return;
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+
     const param = {
       ...dataForm,
     };
@@ -116,6 +153,7 @@ export default function AddSortie() {
                     <option value="CHANTIER">CHANTIER</option>
                     <option value="EVENEMENT">EVENEMENT</option>
                     <option value="VENTE">VENTE</option>
+                    <option value="A VERFIER">A VERFIER</option>
                   </select>
                 </div>
 
@@ -126,14 +164,27 @@ export default function AddSortie() {
                   <input
                     type="text"
                     list="refs"
-                    className="form-control"
+                    className={`form-control ${
+                      msgErreur.etat && dataForm.refMateriel !== null
+                        ? "notvalid-input"
+                        : ""
+                    }`}
                     id="refMateriel"
                     value={dataForm.refMateriel}
                     onChange={(e) => {
                       setDataForm({ ...dataForm, refMateriel: e.target.value });
+                      setMsgErreur({ etat: false, msg: "" });
                     }}
                     autoComplete="off"
                   />
+                  <p
+                    className={
+                      msgErreur ? "text-danger notvalid " : "text-danger"
+                    }
+                    style={{ display: msgErreur.etat ? "block" : "none" }}
+                  >
+                    {msgErreur.msg}
+                  </p>
                   <datalist id="refs" style={{ display: "none" }}>
                     {materiel.map((d) => (
                       <option key={d.refMateriel} value={d.refMateriel}>
@@ -200,7 +251,6 @@ export default function AddSortie() {
                     }}
                     required
                   />
-                
                 </div>
                 <div className="mb-3">
                   <label className="form-label fw-bold">Lieu de location</label>

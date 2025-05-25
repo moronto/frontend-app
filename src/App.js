@@ -1,18 +1,32 @@
+// Styles
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
+
+// React Router
 import { Route, Routes, Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+
+// Notifications
 import toast, { Toaster } from "react-hot-toast";
+
+// Inventory Components
 import Home from "./components/inventaire/home";
-import DetailStock from "./components/inventaire/DetailStock";
 import Stock from "./components/inventaire/Stock";
+import DetailStock from "./components/inventaire/DetailStock";
 import AddStock from "./components/inventaire/AddStock";
 import DeleteStock from "./components/inventaire/DeleteStock";
 import UpdateStock from "./components/inventaire/UpdateStock";
+
+// Movement Components
 import Movements from "./components/movements/Movements";
 import DetailsMovement from "./components/movements/detailsMovement";
 import AddSortie from "./components/movements/AddSortie";
 import AddRetour from "./components/movements/AddRetour";
+import EditMovement from "./components/movements/EditMovement";
+
+// Reservation Components
+import Reservation from "./components/reservations/Reservations";
+import AddReservation from "./components/reservations/addReservation";
 function App() {
   const location = useLocation();
 
@@ -32,11 +46,11 @@ function App() {
 
       {/* Navigation Bar */}
       <nav
-        className="navbar navbar-expand-lg navbar-dark shadow-sm"
+        className="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top"
         style={{ background: "#008080", boxShadow: "5px 10px  #99999 inset" }}
       >
         <div className="container-fluid">
-          <Link to="/home" className="navbar-brand">
+          <Link to="/" className="navbar-brand">
             <img
               src="/img/ATOUT.PNG"
               className="img-fluid"
@@ -102,7 +116,7 @@ function App() {
                   aria-labelledby="reservationDropdown"
                 >
                   <li>
-                    <Link to="#" className="dropdown-item">
+                    <Link to="/reservation" className="dropdown-item">
                       Réservations
                     </Link>
                   </li>
@@ -218,7 +232,7 @@ function App() {
       {/* Main Content - flex-grow-1 permet au contenu de prendre tout l'espace disponible */}
       <main className="flex-grow-1 container-fluid py-1">
         <Routes>
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/stock" element={<Stock />} />
           <Route path="/addStock" element={<AddStock />} />
           <Route path="/stocks/:ref" element={<DetailStock />} />
@@ -226,8 +240,11 @@ function App() {
           <Route path="/stock/update/:ref" element={<UpdateStock />} />
           <Route path="/movements" element={<Movements />} />
           <Route path="/detailsMovement/:id" element={<DetailsMovement />} />
+          <Route path="/editMovement/:id" element={<EditMovement />} />
           <Route path="/addSortie" element={<AddSortie />} />
           <Route path="/addRetour" element={<AddRetour />} />
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/addreservation" element={<AddReservation />} />
         </Routes>
       </main>
 

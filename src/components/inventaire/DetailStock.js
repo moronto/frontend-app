@@ -67,12 +67,12 @@ export default function DetailStock() {
 
     // Organize data into two columns
     const generalInfo = [
-        { label: "Référence", value: st.refMateriel },
-        { label: "Designation", value: st.designation },
-        { label: "Situation", value: st.situation },
-        { label: "Emplacement", value: st.lieu },
-        { label: "Ville", value: st.client },
-        { label: "Catégorie", value: st.categorie }
+      { label: "Référence", value: st.refMateriel },
+      { label: "Designation", value: st.designation },
+      { label: "Situation", value: st.situation },
+      { label: "Emplacement", value: st.lieu },
+      { label: "Ville", value: st.ville },
+      { label: "Catégorie", value: st.categorie },
     ];
 
     const categorySpecificInfo = [];

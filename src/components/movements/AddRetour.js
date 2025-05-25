@@ -7,50 +7,47 @@ export default function AddEntrer() {
   const navigate = useNavigate();
   const [inputSearch, setInputSearch] = useState("");
   const [search, setSearch] = useState("");
-  const [materiel, setMateriel] = useState(null);
+  const [materiel, setMateriel] = useState([]);
   const [infoMove, setInfoMove] = useState({
     typeMovement: "ENTREE",
     dateMovement: new Date().toISOString().split("T")[0],
     typeLocation: "",
     depot: "",
-   
     qte: 1,
-   
-    
     matTrans: "",
     condTrans: "",
     observations: "",
   });
-  const { ref } = useParams();
 
   // Find designation of ref and check if ref exists
-    const fetchMovement = async () => {
-      try {
-        const response = await fetch(
-          `http://127.0.0.1:8000/api/infoMateriel/${inputSearch}`
-        );
-        const data = await response.json();
-        setMateriel(data.data);
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  const fetchMovement = async () => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/infoMateriel/${inputSearch}`
+      );
+      if (!response.ok) {
+        // throw new Error("Pardon ce mouvement n'existe pas");
+        setMateriel([]);
       }
-      setSearch(inputSearch)
-    };
-
- 
-
-
-
+      const data = await response.json();
+      setMateriel(data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setSearch(inputSearch);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const param={...materiel,
-      ...infoMove
-    }
+    const param = {
+      refMateriel: materiel.refMateriel,
+      designation: materiel.designation,
+      lieu: infoMove.depot,
+      ville: materiel.lieu,
+      ...infoMove,
+    };
 
-    console.log(param)
     try {
       const response = await axios.post(
         "http://localhost:8000/api/retirerMateriel/",
@@ -61,19 +58,17 @@ export default function AddEntrer() {
           },
         }
       );
-      const data= response.data
+      const data = response.data;
 
       navigate("/movements", {
         state: {
-          msg: data.msg
+          msg: data.msg,
         },
       });
     } catch (error) {
       alert(`Erreur: ${error.response?.data?.message || error.message}`);
     }
   };
-
-
 
   return (
     <div className="container w-75 py-4">
@@ -248,17 +243,19 @@ export default function AddEntrer() {
                     </div>
                   </div>
                 </div>
-              ) : (
+              ) : materiel.situation === "DISPONIBLE" ? (
                 <div className="alert alert-warning mt-3">
                   <i className="fas fa-exclamation-triangle me-2"></i>
                   Ce matériel est déja disponible !
                 </div>
+              ) : search && !materiel.situation ? (
+                <div className="alert alert-info mt-3">
+                  <i className="fas fa-info-circle me-2"></i>
+                  Aucun matériel trouvé avec cette référence
+                </div>
+              ) : (
+                <div></div>
               )
-            ) : search ? (
-              <div className="alert alert-info mt-3">
-                <i className="fas fa-info-circle me-2"></i>
-                Aucun matériel trouvé avec cette référence
-              </div>
             ) : null}
           </div>
 

@@ -33,7 +33,7 @@ export default function Movement() {
           d.typeMovement?.toLowerCase().includes(inputSearch.toLowerCase()) ||
           d.refMateriel?.toLowerCase().includes(inputSearch.toLowerCase()) ||
           d.designation?.toLowerCase().includes(inputSearch.toLowerCase()) ||
-          d.client?.toLowerCase().includes(inputSearch.toLowerCase())
+          d.ville?.toLowerCase().includes(inputSearch.toLowerCase())
         );
       });
       setDataFiltred(dataF);
@@ -147,7 +147,7 @@ export default function Movement() {
                   <th className="py-3">Date</th>
                   <th className="py-3">Référence</th>
                   <th className="py-3">Désignation</th>
-                  <th className="py-3">Client</th>
+                  <th className="py-3">ville</th>
                   <th className="py-3 text-end">Actions</th>
                 </tr>
               </thead>
@@ -161,7 +161,7 @@ export default function Movement() {
                       </td>
                       <td className="fw-bold">{move.refMateriel}</td>
                       <td>{move.designation}</td>
-                      <td>{move.client}</td>
+                      <td>{move.ville}</td>
                       <td className="text-end">
                         <div className="d-flex justify-content-end gap-2">
                           <Link
@@ -170,6 +170,13 @@ export default function Movement() {
                             title="Voir détails"
                           >
                             <i className="fas fa-eye"></i>
+                          </Link>
+                          <Link
+                            to={`/editMovement/${move.id}`}
+                            className="btn btn-sm btn-outline-warning"
+                            title="Modifier"
+                          >
+                            <i className="fas fa-edit"></i>
                           </Link>
                           <button
                             className="btn btn-sm btn-outline-danger"

@@ -283,17 +283,29 @@ export default function UpdateStock() {
                       }
                     />
 
-                    <FormField
-                      label="Situation"
-                      name="situation"
-                      value={dataStock.situation}
-                      onChange={(e) =>
-                        setDataStock({
-                          ...dataStock,
-                          situation: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="mb-3">
+                      <label
+                        htmlFor="situation"
+                        className="form-label fw-bold text-muted"
+                      >
+                        Situation
+                      </label>
+                      <select
+                        id="situation"
+                        className="form-control"
+                        onChange={(e) =>
+                          setDataStock({
+                            ...dataStock,
+                            situation: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="LOUER">LOUER</option>
+                        <option value="DISPONIBLE">DISPONIBLE</option>
+                        <option value="VENTE">VENTE</option>
+                      </select>
+                    </div>
+
                     <FormField
                       label="Emplacement"
                       name="lieu"
@@ -354,6 +366,7 @@ export default function UpdateStock() {
       </div>
     );
 }
+
 
 // Reusable form field component
 function FormField({ label, name, value, onChange, type = "text" }) {
