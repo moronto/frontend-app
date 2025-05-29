@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from "../../Config";
 
 export default function AddReservation() {
   const [dateRetour, setDateRetour] = useState(false);
@@ -9,18 +10,13 @@ export default function AddReservation() {
     dateReservation: "",
     client: "",
     etat: "En cours",
-    created_at: new Date(),
   });
-  const [reservationDetails, setReservationDetails] = useState([
-    { designation: "", qte: 1, dateLivraison: "", dateRetour: "" },
-  ]);
+  const [reservationDetails, setReservationDetails] = useState([]);
   const [charge, setCharge] = useState({});
 
   useEffect(() => {
     const fetchChargeAffaire = async () => {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/chargeaffaire/"
-      );
+      const response = await axios.get(`${API_URL}/api/chargeaffaire/`);
       if (response) {
         setCharge(response.data);
       } else {
@@ -34,7 +30,7 @@ export default function AddReservation() {
   // generate reference of reservation
 
   const generatedRef = async () => {
-    const response = await axios.get("http://127.0.0.1:8000/api/reservation/");
+    const response = await axios.get(`${API_URL}/api/reservation/`);
     let acc = [];
 
     if (response) {
@@ -47,21 +43,33 @@ export default function AddReservation() {
       }, acc);
     }
     const yearNow = new Date().getFullYear();
-    console.log(acc);
     let ref =
       acc.length === 0
         ? "0001-" + yearNow
         : `${Math.max(...acc) + 1}-` + yearNow;
 
-    console.log(ref);
-
     setReservation({ ...reservation, refReservation: ref });
+    console.log("je suis au debut");
+    setReservationDetails([
+      {
+        ...reservationDetails,
+        refReservation: ref,
+      },
+    ]);
+    console.log("je suis a la fin");
+    console.log("hamayjran", reservationDetails);
   };
 
   const addReservationLine = () => {
     setReservationDetails([
       ...reservationDetails,
-      { designation: "", qte: 1, dateLivraison: "", dateRetour: "" },
+      {
+        refReservation: "",
+        designation: "",
+        qte: 1,
+        dateLivraison: "",
+        dateRetour: "",
+      },
     ]);
   };
 
@@ -89,24 +97,33 @@ export default function AddReservation() {
     } else {
       document.querySelector(`[data-id="${index}"]`).style.display = "none";
     }
+    checkDisplayP();
   };
 
   const checkDisplayP = () => {
-    const arr = document.querySelectorAll("reservation p");
-    const p = arr.filter((item) => {
-      return item.style.display;
+    let nbrP = 0;
+    const arr = Array.from(document.querySelectorAll("#reservationBody p"));
+
+    const t = arr.map((ar) => {
+      return ar.style.display;
     });
-    console.log(p);
+
+    t.includes("block") ? setDateRetour(true) : setDateRetour(false);
   };
-  checkDisplayP();
+
   //add new resrvation
-  function handelNewReservation(e) {
+  async function handelNewReservation(e) {
     e.preventDefault();
 
     const param = {
-      ...reservation,
-      ...reservationDetails,
+      reservation: { ...reservation },
+      detailsReservation: { ...reservationDetails },
     };
+    const response = await axios.post(`${API_URL}/api/newreservation/`, param, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
   return (
@@ -164,13 +181,19 @@ export default function AddReservation() {
                   required
                 >
                   <option value="">Sélectionnez...</option>
-                  {charge.length > 0
-                    ? charge.map((ch) => (
-                        <option key={ch.id} value={ch.name}>
-                          {ch.name}
-                        </option>
-                      ))
-                    : null}
+                  {charge.length > 0 ? (
+                    charge.map((ch) => (
+                      <option key={ch.id} value={ch.name}>
+                        {ch.name}
+                      </option>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center">
+                        Chargement des données...
+                      </td>
+                    </tr>
+                  )}
                 </select>
               </div>
 
@@ -218,96 +241,102 @@ export default function AddReservation() {
                     </tr>
                   </thead>
                   <tbody id="reservationBody">
-                    {reservationDetails.map((detail, index) => (
-                      <tr key={index}>
-                        <td>
-                          <input
-                            type="text"
-                            name="designation"
-                            className="form-control border-1"
-                            value={detail.designation}
-                            onChange={(e) =>
-                              handleDetailChange(
-                                index,
-                                "designation",
-                                e.target.value
-                              )
-                            }
-                            placeholder="Description de l'article"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            name="qte"
-                            className="form-control border-1"
-                            value={detail.qte}
-                            onChange={(e) =>
-                              handleDetailChange(index, "qte", e.target.value)
-                            }
-                            min="1"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="date"
-                            name="dateLivraison"
-                            className="form-control border-1"
-                            value={detail.dateLivraison}
-                            onChange={(e) => {
-                              handleDetailChange(
-                                index,
-                                "dateLivraison",
-                                e.target.value
-                              );
-                              checkDate(
-                                e.target.value,
-                                detail.dateRetour,
-                                index
-                              );
-                            }}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="date"
-                            className="form-control border-1"
-                            value={detail.dateRetour}
-                            onChange={(e) => {
-                              handleDetailChange(
-                                index,
-                                "dateRetour",
-                                e.target.value
-                              );
-                              checkDate(
-                                detail.dateLivraison,
-                                e.target.value,
-                                index
-                              );
-                            }}
-                          />
-                          <p
-                            className="text-danger"
-                            data-id={index}
-                            style={{ display: "none" }}
-                          >
-                            La date de retour est postérieure à la date de
-                            Livraison
-                          </p>
-                        </td>
-                        <td className="text-center">
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-outline-danger"
-                            onClick={() => removeReservationLine(index)}
-                            disabled={reservationDetails.length <= 1}
-                            title="Supprimer cette ligne"
-                          >
-                            <i className="bi bi-trash"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {reservationDetails
+                      ? reservationDetails.map((detail, index) => (
+                          <tr key={index}>
+                            <td>
+                              <input
+                                type="text"
+                                name="designation"
+                                className="form-control border-1"
+                                value={detail.designation}
+                                onChange={(e) =>
+                                  handleDetailChange(
+                                    index,
+                                    "designation",
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Description de l'article"
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                name="qte"
+                                className="form-control border-1"
+                                value={detail.qte}
+                                onChange={(e) =>
+                                  handleDetailChange(
+                                    index,
+                                    "qte",
+                                    e.target.value
+                                  )
+                                }
+                                min="1"
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="date"
+                                name="dateLivraison"
+                                className="form-control border-1"
+                                value={detail.dateLivraison}
+                                onChange={(e) => {
+                                  handleDetailChange(
+                                    index,
+                                    "dateLivraison",
+                                    e.target.value
+                                  );
+                                  checkDate(
+                                    e.target.value,
+                                    detail.dateRetour,
+                                    index
+                                  );
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <input
+                                type="date"
+                                className="form-control border-1"
+                                value={detail.dateRetour}
+                                onChange={(e) => {
+                                  handleDetailChange(
+                                    index,
+                                    "dateRetour",
+                                    e.target.value
+                                  );
+                                  checkDate(
+                                    detail.dateLivraison,
+                                    e.target.value,
+                                    index
+                                  );
+                                }}
+                              />
+                              <p
+                                className="text-danger"
+                                data-id={index}
+                                style={{ display: "none" }}
+                              >
+                                La date de retour est postérieure à la date de
+                                Livraison
+                              </p>
+                            </td>
+                            <td className="text-center">
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => removeReservationLine(index)}
+                                disabled={reservationDetails.length <= 1}
+                                title="Supprimer cette ligne"
+                              >
+                                <i className="bi bi-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      : null}
                   </tbody>
                 </table>
               </div>

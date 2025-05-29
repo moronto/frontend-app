@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useState,useEffect } from 'react';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./AddSortie.css";
+import { API_URL } from "../../Config";
+
 export default function AddSortie() {
   const [msgErreur, setMsgErreur] = useState({ etat: false, msg: "" });
   const navigate = useNavigate();
@@ -25,7 +27,7 @@ export default function AddSortie() {
   //find designation of ref and check if ref is exixte
   useEffect(() => {
     const fetchMovement = async () => {
-      const response = await fetch("http://127.0.0.1:8000/api/stock/");
+      const response = await fetch(`${API_URL}/api/stock/`);
       const data = await response.json();
       setMateriel(data);
       const f = data.find((d) => d.refMateriel === dataForm.refMateriel);
@@ -43,9 +45,7 @@ export default function AddSortie() {
     e.preventDefault();
     setMsgErreur({ etat: "false", msg: "" });
 
-    const resp = await fetch(
-      `http://localhost:8000/api/stock/${dataForm.refMateriel}`
-    );
+    const resp = await fetch(`${API_URL}/api/stock/${dataForm.refMateriel}`);
     const d = await resp.json();
     console.log(d);
     try {
@@ -81,15 +81,11 @@ export default function AddSortie() {
     };
     console.log(param);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/addSortie/",
-        param,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/api/addSortie/`, param, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       navigate("/movements", {
         state: {

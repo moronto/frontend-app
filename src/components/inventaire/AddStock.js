@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./addStock.css";
+import { API_URL } from "../../Config";
 
 export default function AddStock() {
   const navigate = useNavigate();
@@ -106,15 +108,11 @@ export default function AddStock() {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/stocks/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/api/stocks/`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       navigate("/stock", {
         state: {
@@ -128,7 +126,7 @@ export default function AddStock() {
   };
 
   async function checkRef(ref) {
-    const response = await axios.get("http://localhost:8000/api/stock/");
+    const response = await axios.get(`${API_URL}/api/stock/`);
     const data = await response.data;
     let i = 0;
 

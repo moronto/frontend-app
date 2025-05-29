@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import DetailsMovement from "./detailsMovement";
 import axios from "axios";
+import { API_URL } from "../../Config";
 
 export default function EditMovement() {
   const navigate = useNavigate();
@@ -12,9 +13,7 @@ export default function EditMovement() {
   useEffect(() => {
     const fetchMovement = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/detailsMovement/${id}`
-        );
+        const response = await fetch(`${API_URL}/api/detailsMovement/${id}`);
 
         if (!response.ok) {
           throw new Error("Pardon ce mouvement n'existe pas");
@@ -30,7 +29,7 @@ export default function EditMovement() {
 
   const handelSave = async () => {
     const response = await axios.put(
-      `http://localhost:8000/api/update/${id}`,
+      `${API_URL}/api/update/${id}`,
       movementDetail
     );
 

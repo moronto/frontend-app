@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import { API_URL } from "../../Config";
 
 export default function DetailsMovement() {
   const [movementDetail, setMovementDetail] = useState({});
@@ -8,9 +9,7 @@ export default function DetailsMovement() {
   useEffect(() => {
     const fetchMovement = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/detailsMovement/${id}`
-        );
+        const response = await fetch(`${API_URL}/api/detailsMovement/${id}`);
 
         if (!response.ok) {
           throw new Error("Pardon ce mouvement n'existe pas");

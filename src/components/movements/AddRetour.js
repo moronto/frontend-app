@@ -2,6 +2,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { API_URL } from "../../Config";
 
 export default function AddEntrer() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function AddEntrer() {
   const fetchMovement = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/api/infoMateriel/${inputSearch}`
+        `${API_URL}/api/infoMateriel/${inputSearch}`
       );
       if (!response.ok) {
         // throw new Error("Pardon ce mouvement n'existe pas");
@@ -50,7 +51,7 @@ export default function AddEntrer() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/retirerMateriel/",
+        `${API_URL}/api/retirerMateriel/`,
         param,
         {
           headers: {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../../Config";
 import axios from "axios";
 
 export default function Movement() {
@@ -13,7 +14,7 @@ export default function Movement() {
   useEffect(() => {
     const fetchMouvement = async () => {
       try {
-        const resp = await fetch("http://127.0.0.1:8000/api/movements/");
+        const resp = await fetch(`${API_URL}/api/movements/`);
         const data = await resp.json();
         setMovement(data);
         setDataFiltred(data);
@@ -52,9 +53,7 @@ export default function Movement() {
   //delete movement
   async function deleteMovement() {
     try {
-      await axios.delete(
-        `http://localhost:8000/api/delete/${selectedMouvement.id}`
-      );
+      await axios.delete(`${API_URL}/api/delete/${selectedMouvement.id}`);
 
       // Mise à jour locale sans recharger
       setMovement((prev) => prev.filter((m) => m.id !== selectedMouvement.id));

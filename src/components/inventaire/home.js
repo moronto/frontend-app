@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
+import { Link } from "react-router-dom";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import { API_URL } from "../../Config";
 
 export default function Home() {
   const chartRef = useRef(null);
@@ -29,7 +32,7 @@ export default function Home() {
     const fetchStatistics = async () => {
       try {
         setLoading(true);
-        const resp = await fetch("http://localhost:8000/api/statistics/");
+        const resp = await fetch(`${API_URL}/api/statistics/`);
 
         if (!resp.ok) {
           throw new Error(`Erreur HTTP: ${resp.status}`);

@@ -121,7 +121,7 @@ function App() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="dropdown-item">
+                    <Link to="/addreservation" className="dropdown-item">
                       Ajouter Réservation
                     </Link>
                   </li>

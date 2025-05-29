@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { API_URL } from "../../Config";
 
 export default function Reservation() {
   const [reservation, setReservation] = useState({});
@@ -9,7 +10,7 @@ export default function Reservation() {
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const response = await axios.get("http://127.0.0.1:8000/api/reservation");
+      const response = await axios.get(`${API_URL}/api/reservation`);
       console.log(response.data);
       setReservation(response.data);
     };
